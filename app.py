@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, make_response
-from oauth_token import Token, Contacts_Api
+from oauth_token import Token
+from contacts_api import Contacts_Api
 import requests
 
 app_name = __name__
@@ -34,15 +35,15 @@ def get_contacts(tk):
 
 # landing page
 # shows status of current connection state
-
-
 @app.route('/')
 def index():
     return render_template('index.html', login_state=contacts_api.get_state())
 
-
+# after user pressed the login button
+# also the endpoint for the oauth auth request
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    print("Login")
     if request.method == 'POST':
         # Got authentificated
         contacts_api.got_auth()
