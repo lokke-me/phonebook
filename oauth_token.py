@@ -4,37 +4,6 @@ import pprint
 pp = pprint.PrettyPrinter()
 
 
-class Contact():
-    def __init__(self, contactDict):
-        self.displayName = contactDict['DisplayName']
-        self.companyName = contactDict['CompanyName']
-
-        self.phones = []
-
-        self.preparePhones(contactDict['BusinessPhones'])
-        self.preparePhones(contactDict['HomePhones'])
-        if contactDict['MobilePhone1']:
-            self.phones.append(self.sanitizePhoneNo(
-                contactDict['MobilePhone1']))
-
-    def __str__(self):
-        return "{} - {} - {}".format(self.displayName, self.companyName, " ".join(self.phones))
-
-    def sanitizePhoneNo(self, rawPhone):
-        rawPhone = str(rawPhone).replace("+49", "0")
-        rawPhone = rawPhone.replace("-", "")
-        rawPhone = rawPhone.replace("/", "")
-        rawPhone = rawPhone.replace("(", "")
-        rawPhone = rawPhone.replace(")", "")
-        rawPhone = rawPhone.replace(" ", "")
-        rawPhone = rawPhone.replace("–", "")
-        print(rawPhone)
-        return rawPhone
-
-    def preparePhones(self, phones):
-        for phone in phones:
-            self.phones.append(self.sanitizePhoneNo(phone))
-
 
 
 

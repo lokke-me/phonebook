@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <title>Phonebook</title>
+  </head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+  <body>
+    <div id="app">
+      <span v-if="status.online">Online</span><span v-else>Offline</span>
+      <button v-if="status.online == false" v-on:click="loginWindow">Login</button>
+    </div>
+    <div id="contacts">
+      <ul>
+	<li v-for="item in contacts">
+	  {{ item }}
+	</li>
+	<ul>
+    </div>
+    <!-- <div id='body'>
+      <a href="https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=<client_id>&redirect_url=http%3A%2F%2Flocalhost%3A5000%2Flogin&response_type=code&scope=Contacts.Read" target="_blank">Login</a> -->
+    </div>
+    <script src="jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="script.js"></script>
+  </body>
+</html>

@@ -1,6 +1,7 @@
-from flask import Flask, request, render_template, make_response
+from flask import Flask, request, render_template, make_response, jsonify
 from oauth_token import Token
-from contacts_api import Contacts_Api
+from contacts_api import Contacts_Api, ContactList
+import data_scheduler
 import requests
 
 app_name = __name__
@@ -8,6 +9,8 @@ app_name = __name__
 app = Flask(__name__)
 
 contacts_api = Contacts_Api()
+contact_list = ContactList()
+ds = None
 
 
 def req_auth(code):
@@ -37,7 +40,7 @@ def get_contacts(tk):
 # shows status of current connection state
 @app.route('/')
 def index():
-    return render_template('index.html', login_state=contacts_api.get_state())
+    return render_template('index.html')
 
 # after user pressed the login button
 # also the endpoint for the oauth auth request
@@ -51,8 +54,7 @@ def login():
         # Got code for requesting token
         contacts_api.got_code(request.args['code'])
         contacts_api.auth()
-        cl = contacts_api.tt()
-        cl.dump()
+
     return render_template('debug_auth.html', login_state=contacts_api.get_state())
 
 
@@ -72,6 +74,27 @@ def phonebook():
     resp.headers['Content-Type'] = 'application/xml'
     return resp
 
+@app.route('/status')
+def status():
+    return jsonify(status=contacts_api.get_state())
+
+@app.route('/contacts')
+def get_contacts():
+    if contact_list:
+        return jsonify(data=contact_list.to_json())
+    else:
+        return jsonify(data=None)
+
+@app.route('/contacts-length')
+def get_contact_length():
+    if contact_list:
+        return jsonify(data=contact_list.length())
+    else:
+        return jsonify(data=None)
+
+
 
 if __name__ == '__main__':
+    ds = data_scheduler.Data_Scheduler(contacts_api, contact_list)
+    ds.start()
     app.run(debug=True)
