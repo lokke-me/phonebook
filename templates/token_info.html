@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block body %}
+<table>
+    <tr>
+        <td>State</td><td>{{ context['login_state'] }}</td>
+    </tr>
+    <tr>
+        <td>exires in</td><td>{{ context['expires_in'] }}</td>
+    </tr>
+    <tr>
+        <td>Token</td><td>{{ context['token'] }}</td>
+    </tr>
+
+{% endblock %}
