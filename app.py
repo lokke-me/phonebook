@@ -82,9 +82,9 @@ def status():
 @app.route('/contacts')
 def get_contacts():
     if contact_list:
-        return jsonify(data=contact_list.to_json())
+        return jsonify(contact_list.to_json())
     else:
-        return jsonify(data=None)
+        return jsonify(None)
 
 @app.route('/contacts-length')
 def get_contact_length():
