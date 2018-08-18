@@ -155,11 +155,15 @@ class ContactList:
         self.list.clear()
 
     def to_json(self):
+        self.sort()
         result = []
         for item in self.list:
             result.append(item.to_dict())
 
         return result
+
+    def sort(self):
+        self.list.sort(key=lambda x: ord(str(x.displayName[:1]).upper()))
 
 
 class Contact():
