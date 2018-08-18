@@ -12,7 +12,7 @@ class Data_Scheduler(threading.Thread):
         print("Run data thread")
         while(True):
             if self.ca.get_state():
-                self.ca.tt(self.contact_list)
+                self.ca.get_contacts(self.contact_list)
                 print("Items: " + str(self.contact_list.length()))
 
             time.sleep(60)

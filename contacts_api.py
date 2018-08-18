@@ -110,7 +110,7 @@ class Contacts_Api():
         # print(self.token.get_state_str())
         return self.token.get_state()
 
-    def tt(self, contact_list):
+    def get_contacts(self, contact_list):
         print("Start dump")
         contact_list.clear()
         auth = {'Authorization': 'Bearer {}'.format(self.token.access_token)}
@@ -127,11 +127,8 @@ class Contacts_Api():
                 res_data = r.json()
                 contact_list.append(res_data['value'])
         else:
-            print("Return code: " + str(r.status_code))
-            print(r.text)
-
-        print("Item length from tt: " + str(contact_list.length()))
-
+            print("(%s) Could not fetch contacts" % str(r.status_code))
+            self.auth_with_refresh_token()
 
 
 class ContactList:
@@ -173,12 +170,10 @@ class Contact():
 
         self.preparePhones(contactDict['businessPhones'])
         self.preparePhones(contactDict['homePhones'])
-        #if contactDict['MobilePhone1']:
-        #    self.phones.append(self.sanitizePhoneNo(
-        #        contactDict['MobilePhone1']))
 
     def __str__(self):
-        return "{} - {} - {}".format(self.displayName, self.companyName, " ".join(self.phones))
+        return "{} - {} - {}".format(self.displayName, self.companyName,
+                                     " ".join(self.phones))
 
     def sanitizePhoneNo(self, rawPhone):
         rawPhone = str(rawPhone).replace("+49", "0")
@@ -196,4 +191,5 @@ class Contact():
             self.phones.append(self.sanitizePhoneNo(phone))
 
     def to_dict(self):
-        return {'displayName': self.displayName, 'companyName': self.companyName, 'phones': self.phones}
+        return {'displayName': self.displayName,
+                'companyName': self.companyName, 'phones': self.phones}
