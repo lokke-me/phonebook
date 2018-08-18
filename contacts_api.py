@@ -5,7 +5,6 @@ from oauth_token import Token
 pp = pprint.PrettyPrinter()
 
 
-
 class Contacts_Api():
     def __init__(self):
         self.client_secret = "<client_secret>"
@@ -16,6 +15,22 @@ class Contacts_Api():
         self.token = Token()
         self.response_type = 'code'
         self.scope = 'Contacts.Read'
+        self.load_savedata()
+
+    def load_savedata(self):
+        with open("savedata", "r") as f:
+            line = f.readline()
+            print("Token from save:")
+            print(line)
+            if len(line) > 0:
+                self.token.got_code(line)
+                self.auth()
+
+    def save_token(self):
+        with open("./savedata", "w") as f:
+            f.write(self.token.code)
+            f.write("\n")
+            f.close()
 
     def auth(self):
         # forword of oauth login
@@ -31,7 +46,8 @@ class Contacts_Api():
                    'redirect_url': self.redirect_url}
 
         r = requests.post(
-            'https://login.microsoftonline.com/common/oauth2/v2.0/token', data=payload)
+            'https://login.microsoftonline.com/common/oauth2/v2.0/token',
+            data=payload)
         if r.status_code == 200:
             # success
             print("Successfully authentificated")
@@ -49,6 +65,7 @@ class Contacts_Api():
 
     def got_code(self, code):
         self.token.got_code(code)
+        self.save_token()
 
     def got_auth(self):
         pass

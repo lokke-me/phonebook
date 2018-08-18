@@ -15,4 +15,4 @@ class Data_Scheduler(threading.Thread):
                 self.ca.tt(self.contact_list)
                 print("Items: " + str(self.contact_list.length()))
 
-            time.sleep(10)
+            time.sleep(60)
