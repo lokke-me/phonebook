@@ -19,7 +19,7 @@ var app = new Vue({
         },
         getData: function(){
             axios.get('/status').then(function(res){
-                console.log(res);
+                console.log(res.data);
                 app.status.online = res.data.status;
             });
         }
@@ -32,13 +32,17 @@ var app = new Vue({
 var contacts = new Vue({
     el: '#contacts',
     data: {
-        contacts_info: null,
+        contacts_info: [],
+    },
+    created: function(){
+        this.update();
     },
     methods: {
         update: function(){
-            $.get('/contacts', (data) => {
-                if(data.data && data.data.length > 0){
-                    this.contacts_info = data.data;
+            axios.get('/contacts').then(function(res){
+                if(res && res.data && res.data.length > 0){
+                    console.log(res.data);
+                    contacts.contacts_info = res.data;
                 }
             });
         }

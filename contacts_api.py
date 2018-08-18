@@ -126,6 +126,7 @@ class Contacts_Api():
                 r = requests.get(res_data['@odata.nextLink'], headers=auth)
                 res_data = r.json()
                 contact_list.append(res_data['value'])
+
         else:
             print("(%s) Could not fetch contacts" % str(r.status_code))
             self.auth_with_refresh_token()
@@ -163,13 +164,14 @@ class ContactList:
 
 class Contact():
     def __init__(self, contactDict):
-        self.displayName = contactDict['displayName']
+        self.displayName = "%s, %s" % (contactDict['surname'], contactDict['givenName'])
         self.companyName = contactDict['companyName']
 
         self.phones = []
 
         self.preparePhones(contactDict['businessPhones'])
         self.preparePhones(contactDict['homePhones'])
+        print(contactDict)
 
     def __str__(self):
         return "{} - {} - {}".format(self.displayName, self.companyName,

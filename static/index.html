@@ -17,8 +17,14 @@
       <button v-if="status.online == false" v-on:click="loginWindow">Login</button>
     </div>
     <div id="contacts">
-      <table v-for="contact in contacts_info">
-	<tr><td>{{ contact.displayName }}</td></tr>
+      <button v-on:click="update">Refresh</button>
+      <p>TEST</p>
+      <p>{{ contacts_info.length }}</p>
+      <table class="table">
+        <tr v-for="contact in contacts_info">
+	  <td>{{ contact.displayName }}</td>
+	  <td v-for="phoneNumber in contact.phones">{{ phoneNumber }}</td>
+        </tr>
       </table>
       
     </div>
