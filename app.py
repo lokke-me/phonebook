@@ -82,7 +82,8 @@ def status():
 @app.route('/contacts')
 def get_contacts():
     if contact_list:
-        return jsonify(contact_list.to_json())
+        data_to_send = list(filter(lambda x: len(x['phones']) > 0, contact_list.to_json()))
+        return jsonify(data_to_send)
     else:
         return jsonify(None)
 
