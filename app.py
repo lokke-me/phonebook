@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, make_response, jsonify
+from flask import Flask, request, render_template, make_response, jsonify, redirect
 from oauth_token import Token
 from contacts_api import Contacts_Api, ContactList
 import data_scheduler
@@ -54,6 +54,7 @@ def login():
         # Got code for requesting token
         contacts_api.got_code(request.args['code'])
         contacts_api.auth_with_code()
+        return redirect("/static/index.html")
 
     return render_template('debug_auth.html', login_state=contacts_api.get_state())
 
