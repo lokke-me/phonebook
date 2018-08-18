@@ -11,7 +11,7 @@ var app = new Vue({
     },
     methods: {
         loginWindow: function(){
-            popup = window.open('https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=<client_id>&redirect_url=http%3A%2F%2Flocalhost%3A5000%2Flogin&response_type=code&scope=Contacts.Read');
+            popup = window.open('https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=<client_id>&redirect_url=http%3A%2F%2Flocalhost%3A5000%2Flogin&response_type=code&scope=Contacts.Read%20offline_access');
             console.log(popup);
         }
     }

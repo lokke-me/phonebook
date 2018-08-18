@@ -14,25 +14,27 @@ class Contacts_Api():
         self.grant_type = 'authorization_code'
         self.token = Token()
         self.response_type = 'code'
-        self.scope = 'Contacts.Read'
+        self.scope = 'Contacts.Read%20offline_access'
         self.load_savedata()
 
     def load_savedata(self):
-        with open("savedata", "r") as f:
-            line = f.readline()
-            print("Token from save:")
-            print(line)
-            if len(line) > 0:
-                self.token.got_code(line)
-                self.auth()
+        try:
+            with open("./persist/savedata", "r") as f:
+                line = f.readline()
+                print("Token from save:")
+                print(line)
+                if len(line) > 0:
+                    self.token.set_refresh_token(line)
+                    self.auth_with_refresh_token()
+        except FileNotFoundError:
+            print("No persistend data found")
 
     def save_token(self):
-        with open("./savedata", "w") as f:
-            f.write(self.token.code)
+        with open("./persist/savedata", "w") as f:
+            f.write(self.token.refresh_token)
             f.write("\n")
-            f.close()
 
-    def auth(self):
+    def auth_with_code(self):
         # forword of oauth login
         # contains request token
         # request auth token
@@ -53,10 +55,45 @@ class Contacts_Api():
             print("Successfully authentificated")
             data = r.json()
             self.token.access_token = data['access_token']
+            self.token.set_refresh_token(data['refresh_token'])
             self.token.active = True
             self.token.expires_in = data['expires_in']
-            print("Token: " + self.token.access_token)
+            # print("Token: " + self.token.access_token)
             print(r.text)
+            self.save_token()
+        else:
+            print("ERROR: could not authorize access token")
+            r.raw
+
+        print("End authentification")
+
+    def auth_with_refresh_token(self):
+        # forword of oauth login
+        # contains request token
+        # request auth token
+        # save auth token
+        # start trigger to refresh token automatically
+        print("Start authentification")
+        payload = {'grant_type': "refresh_token",
+                   'client_id': self.client_id,
+                   'client_secret': self.client_secret,
+                   'refresh_token': self.token.refresh_token,
+                   'redirect_url': self.redirect_url}
+
+        r = requests.post(
+            'https://login.microsoftonline.com/common/oauth2/v2.0/token',
+            data=payload)
+        if r.status_code == 200:
+            # success
+            print("Successfully authentificated")
+            data = r.json()
+            self.token.access_token = data['access_token']
+            self.token.set_refresh_token(data['refresh_token'])
+            self.token.active = True
+            self.token.expires_in = data['expires_in']
+            # print("Token: " + self.token.access_token)
+            print(r.text)
+            self.save_token()
         else:
             print("ERROR: could not authorize access token")
             r.raw
@@ -65,7 +102,6 @@ class Contacts_Api():
 
     def got_code(self, code):
         self.token.got_code(code)
-        self.save_token()
 
     def got_auth(self):
         pass

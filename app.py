@@ -53,7 +53,7 @@ def login():
     elif request.method == 'GET':
         # Got code for requesting token
         contacts_api.got_code(request.args['code'])
-        contacts_api.auth()
+        contacts_api.auth_with_code()
 
     return render_template('debug_auth.html', login_state=contacts_api.get_state())
 

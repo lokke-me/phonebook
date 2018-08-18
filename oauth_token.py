@@ -4,9 +4,6 @@ import pprint
 pp = pprint.PrettyPrinter()
 
 
-
-
-
 class Token:
     def __init__(self):
         self.token = None
@@ -14,6 +11,7 @@ class Token:
         self.active = False
         self.code = None
         self.access_token = None
+        self.refresh_token = None
 
     def get_token(self):
         return self.token
@@ -45,4 +43,5 @@ class Token:
     def got_access_token(self, access_token):
         self.access_token = access_token
 
-
+    def set_refresh_token(self, refresh_token):
+        self.refresh_token = refresh_token
