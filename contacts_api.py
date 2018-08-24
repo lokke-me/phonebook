@@ -19,7 +19,7 @@ class Contacts_Api():
 
     def load_savedata(self):
         try:
-            with open("./persist/savedata", "r") as f:
+            with open("./savedata", "r") as f:
                 line = f.readline()
                 print("Token from save:")
                 print(line)
@@ -30,7 +30,7 @@ class Contacts_Api():
             print("No persistend data found")
 
     def save_token(self):
-        with open("./persist/savedata", "w") as f:
+        with open("./savedata", "w") as f:
             f.write(self.token.refresh_token)
             f.write("\n")
 
