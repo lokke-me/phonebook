@@ -6,10 +6,10 @@ pp = pprint.PrettyPrinter()
 
 
 class Contacts_Api():
-    def __init__(self):
-        self.client_secret = "<client_secret>"
-        self.client_id = "<client_id>"
-        self.redirect_url = "http%3A%2F%2Flocalhost%3A5000%2Flogin"
+    def __init__(self, client_secret, client_id):
+        self.client_secret = client_secret
+        self.client_id = client_id
+        self.redirect_url = "http%3A%2F%2Flocalhost%3A5105%2Flogin"
         self.token_request_url = 'https://login.microsoftonline.com/common/oauth2/v2.0/token'
         self.grant_type = 'authorization_code'
         self.token = Token()
@@ -162,6 +162,15 @@ class ContactList:
 
         return result
 
+    def to_xml(self):
+        res = "<YealinkIPPhoneDirectory>"
+
+        for contact in self.list:
+            res += contact.to_xml_node()
+
+        res += "</YealinkIPPhoneDirectory>"
+        return res
+
     def sort(self):
         self.list.sort(key=lambda x: ord(str(x.displayName[:1]).upper()))
 
@@ -199,3 +208,13 @@ class Contact():
     def to_dict(self):
         return {'displayName': self.displayName,
                 'companyName': self.companyName, 'phones': self.phones}
+
+    def to_xml_node(self):
+        res = "<DirectoryEntry><Name>%s</Name>" % self.displayName
+
+        for phone_number in self.phones:
+            res += "<Telephone>%s</Telephone>" % phone_number
+
+        res += "</DirectoryEntry>"
+
+        return res

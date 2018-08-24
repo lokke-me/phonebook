@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, make_response, jsonify, redirect
 from oauth_token import Token
 from contacts_api import Contacts_Api, ContactList
+from yaml import load, Loader
 import data_scheduler
 import requests
 
@@ -8,7 +9,17 @@ app_name = __name__
 
 app = Flask(__name__)
 
-contacts_api = Contacts_Api()
+config = None
+
+with open("config.yaml", "r") as config_file:
+    config = load(config_file)
+
+print(config)
+
+call_url = 'http://%s:%s@%s/cgi-bin/ConfigManApp.com?number=' % (
+    config['phone_user'], config['phone_pwd'], config['phone_ip'])
+
+contacts_api = Contacts_Api(config['client_secret'], config['client_id'])
 contact_list = ContactList()
 ds = None
 
@@ -71,9 +82,10 @@ def token_info():
 
 @app.route('/phonebook.xml')
 def phonebook():
-    resp = make_response('<YealinkIPPhoneDirectory> <DirectoryEntry> <Name>Chris Wild</Name> <Telephone>5053</Telephone> <Telephone>5553</Telephone> </DirectoryEntry> <DirectoryEntry> <Name>Door Intercom</Name> <Telephone>sip:123@10.10.0.200</Telephone> </DirectoryEntry> <DirectoryEntry> <Name>Provu</Name> <Telephone>01484840048</Telephone> </DirectoryEntry> </YealinkIPPhoneDirectory> ', 200)
+    resp = make_response(contact_list.to_xml(), 200)
     resp.headers['Content-Type'] = 'application/xml'
     return resp
+
 
 @app.route('/status')
 def status():
@@ -82,7 +94,8 @@ def status():
 @app.route('/contacts')
 def get_contacts():
     if contact_list:
-        data_to_send = list(filter(lambda x: len(x['phones']) > 0, contact_list.to_json()))
+        data_to_send = list(filter(lambda x: len(x['phones']) > 0,
+                                   contact_list.to_json()))
         return jsonify(data_to_send)
     else:
         return jsonify(None)
@@ -94,9 +107,14 @@ def get_contact_length():
     else:
         return jsonify(data=None)
 
+@app.route('/call')
+def call():
+    phone_number = request.args.get('number', '')
+    requests.get(call_url + phone_number)
+    return "OK"
 
 
 if __name__ == '__main__':
     ds = data_scheduler.Data_Scheduler(contacts_api, contact_list)
     ds.start()
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5105)
