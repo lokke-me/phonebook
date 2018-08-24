@@ -4,6 +4,7 @@ from contacts_api import Contacts_Api, ContactList
 from yaml import load, Loader
 import data_scheduler
 import requests
+import sys
 
 app_name = __name__
 
@@ -11,7 +12,14 @@ app = Flask(__name__)
 
 config = None
 
-with open("config.yaml", "r") as config_file:
+print(sys.argv)
+config_file_name = "config.yaml"
+
+if len(sys.argv) > 1:
+    print("Using %s for config file" % sys.argv[1])
+    config_file_name = sys.argv[1]
+
+with open(config_file_name, "r") as config_file:
     config = load(config_file)
 
 print(config)
