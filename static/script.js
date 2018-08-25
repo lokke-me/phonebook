@@ -3,24 +3,29 @@ var popup = null;
 var app = new Vue({
     el: '#app',
     data: {
-        message: 'Hello!',
-        popup: null,
         status: {
             online: false,
-        }
+        },
+        link: null
     },
     created: function(){
-        this.getData();
+        this.getStatus();
+        this.getLink();
     },
     methods: {
         loginWindow: function(){
-            popup = window.open('https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=<client_id>&redirect_url=http%3A%2F%2Flocalhost%3A5105%2Flogin&response_type=code&scope=Contacts.Read%20offline_access', '_self');
-            console.log(popup);
+            window.open(app.link, '_self');
         },
-        getData: function(){
+        getStatus: function(){
             axios.get('/status').then(function(res){
                 console.log(res.data);
                 app.status.online = res.data.status;
+            });
+        },
+        getLink: function(){
+            axios.get('/link').then(function(res){
+                console.log(res.data);
+                app.link = res.data;
             });
         }
     }

@@ -121,6 +121,14 @@ def call():
     requests.get(call_url + phone_number)
     return "OK"
 
+@app.route('/link')
+def link():
+    res = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?"
+    res += "client_id=" + config['client_id'] + "&redirect_url="
+    res += "http%3A%2F%2Flocalhost%3A5105%2Flogin"
+    res += "&response_type=code&scope=Contacts.Read%20offline_access"
+    return res
+
 
 if __name__ == '__main__':
     ds = data_scheduler.Data_Scheduler(contacts_api, contact_list)
