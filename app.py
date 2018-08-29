@@ -22,8 +22,6 @@ if len(sys.argv) > 1:
 with open(config_file_name, "r") as config_file:
     config = load(config_file)
 
-print(config)
-
 call_url = 'http://%s:%s@%s/cgi-bin/ConfigManApp.com?number=' % (
     config['phone_user'], config['phone_pwd'], config['phone_ip'])
 
