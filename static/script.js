@@ -1,5 +1,43 @@
 var popup = null;
 
+
+Vue.component('call-button', {
+    props: ['pNumber'],
+    template: '<td>{{ number }}</td>'
+});
+
+
+Vue.component('contact-list', {
+    props : ['contacts'],
+    template: '<table class="table table-sm><contact-row v-for="contact in contacts" v-bind:contact="contact" v-bind:key="contact.displayName"></contact-row>'
+});
+
+Vue.component('contact-row',{
+    props: ['contact'],
+    template: '<tr><td> {{ contact.displayName }} </td></tr>'
+});
+
+
+Vue.component('c-list', {
+    props: ['contacts'],
+    template: '<div class="contact-list-header"> {{ contacts.length }} <c-single v-for="contact in contacts" v-bind:contact="contact" v-bind:key="contact.displayName"> </c-single> </div>'
+});
+
+Vue.component('c-single', {
+    props: {
+        contact: Object
+    },
+    template: '<div><span>{{ contact.displayName }}</span><c-phone-number v-for="phone in contact.phones" v-bind:key="phone" v-bind:phonenumber="phone"></c-phone-number></div>'
+});
+
+
+Vue.component('c-phone-number', {
+    props: {
+        phonenumber: String
+    },
+    template: '<span>{{ phonenumber }}</span>'
+});
+
 var app = new Vue({
     el: '#app',
     data: {
@@ -36,8 +74,10 @@ var app = new Vue({
 
 var contacts = new Vue({
     el: '#contacts',
-    data: {
-        contacts_info: [],
+    data: function(){
+        return {
+            contacts_info: []
+        }
     },
     created: function(){
         this.update();

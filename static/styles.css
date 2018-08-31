@@ -1,0 +1,19 @@
+* {
+    font-family: Arial;
+}
+
+div {
+    background-color: lightgray;
+    
+}
+
+#contacts {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+span {
+    padding: 10px;
+    background-color: gold;
+    width: 150px;
+}
